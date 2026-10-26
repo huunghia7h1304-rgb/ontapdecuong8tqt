@@ -1,0 +1,932 @@
+<!DOCTYPE html>
+<html lang="vi" class="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hệ Thống Ôn Tập Đề Cương Giữa Kỳ I - Lớp 8</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        brand: {
+                            50: '#f0f5ff',
+                            100: '#e0ebff',
+                            400: '#60a5fa',
+                            500: '#3b82f6',
+                            600: '#2563eb',
+                            700: '#1d4ed8',
+                            900: '#1e3a8a',
+                        }
+                    },
+                    fontFamily: {
+                        sans: ['Inter', 'Segoe UI', 'Roboto', 'sans-serif'],
+                    }
+                }
+            }
+        }
+    </script>
+    <!-- FontAwesome & Lucide Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Google Fonts Inter -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            transition: background-color 0.3s ease, color 0.3s ease;
+        }
+
+        /* Glassmorphism Classes */
+        .glass-panel {
+            background: rgba(255, 255, 255, 0.7);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+        }
+
+        .dark .glass-panel {
+            background: rgba(15, 23, 42, 0.75);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+        }
+
+        .glass-card {
+            background: rgba(255, 255, 255, 0.5);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.4);
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .dark .glass-card {
+            background: rgba(30, 41, 59, 0.6);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        .glass-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 12px 30px -10px rgba(0, 0, 0, 0.15);
+        }
+
+        .dark .glass-card:hover {
+            box-shadow: 0 12px 30px -10px rgba(0, 0, 0, 0.5);
+            border-color: rgba(99, 102, 241, 0.3);
+        }
+
+        /* Scrollbar Styling */
+        ::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: transparent;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: rgba(156, 163, 175, 0.4);
+            border-radius: 9999px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: rgba(156, 163, 175, 0.7);
+        }
+
+        /* Custom Animated Background */
+        .bg-glow {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            z-index: -1;
+            overflow: hidden;
+            pointer-events: none;
+        }
+
+        .glow-orb {
+            position: absolute;
+            border-radius: 50%;
+            filter: blur(90px);
+            opacity: 0.35;
+            animation: float 20s infinite alternate cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .dark .glow-orb {
+            opacity: 0.25;
+        }
+
+        @keyframes float {
+            0% { transform: translate(0, 0) scale(1); }
+            50% { transform: translate(100px, 50px) scale(1.1); }
+            100% { transform: translate(-50px, 100px) scale(0.9); }
+        }
+
+        /* Toast notification animation */
+        @keyframes slideUp {
+            from { transform: translateY(100%) scale(0.9); opacity: 0; }
+            to { transform: translateY(0) scale(1); opacity: 1; }
+        }
+        .toast-animate {
+            animation: slideUp 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+        }
+    </style>
+</head>
+
+<body class="bg-slate-100 dark:bg-slate-950 text-slate-800 dark:text-slate-100 min-h-screen flex flex-col antialiased selection:bg-indigo-500 selection:text-white transition-colors duration-300">
+
+    <!-- Dynamic Background Glow Effects -->
+    <div class="bg-glow">
+        <div class="glow-orb w-[450px] h-[450px] bg-blue-500 top-[-100px] left-[-100px]"></div>
+        <div class="glow-orb w-[500px] h-[500px] bg-indigo-500 bottom-[-150px] right-[-100px] animation-delay-2000"></div>
+        <div class="glow-orb w-[350px] h-[350px] bg-purple-500 top-[40%] left-[30%] animation-delay-4000"></div>
+    </div>
+
+    <!-- Top Navigation Bar -->
+    <header class="sticky top-0 z-40 glass-panel border-b border-slate-200/50 dark:border-slate-800/50 shadow-sm">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-20 flex items-center justify-between">
+            <!-- Brand Logo & Title -->
+            <div class="flex items-center space-x-3 cursor-pointer" onclick="resetFilters()">
+                <div class="w-11 h-11 rounded-2xl bg-gradient-to-tr from-blue-600 to-indigo-500 flex items-center justify-center text-white shadow-lg shadow-blue-500/30">
+                    <i class="fa-solid fa-graduation-cap text-xl"></i>
+                </div>
+                <div>
+                    <h1 class="text-lg sm:text-xl font-bold bg-gradient-to-r from-blue-600 via-indigo-600 to-purple-600 dark:from-blue-400 dark:via-indigo-300 dark:to-purple-400 bg-clip-text text-transparent">
+                        ÔN TẬP GIỮA KỲ I - LỚP 8
+                    </h1>
+                    <p class="text-xs text-slate-500 dark:text-slate-400 font-medium hidden sm:block">Hệ thống Kho Đề Cương Chẩn Chuẩn Kèm Tải Nhanh</p>
+                </div>
+            </div>
+
+            <!-- Actions Controls -->
+            <div class="flex items-center space-x-2 sm:space-x-3">
+                <!-- Quick Download All -->
+                <button onclick="downloadAllDocs()" class="hidden md:flex items-center space-x-2 px-3.5 py-2 rounded-xl bg-slate-200/80 dark:bg-slate-800/80 hover:bg-slate-300 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-200 text-xs font-semibold transition">
+                    <i class="fa-solid fa-cloud-arrow-down text-blue-500"></i>
+                    <span>Tải tất cả</span>
+                </button>
+
+                <!-- Theme Toggle Button -->
+                <button id="themeToggleBtn" onclick="toggleDarkMode()" class="p-2.5 rounded-xl bg-slate-200/70 dark:bg-slate-800/70 text-slate-700 dark:text-slate-300 hover:scale-105 active:scale-95 transition">
+                    <i id="themeIcon" class="fa-solid fa-moon text-lg"></i>
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content Container -->
+    <main class="flex-grow max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-8 flex flex-col space-y-8">
+        
+        <!-- Hero & Filter Section -->
+        <section class="space-y-6">
+            <div class="text-center max-w-3xl mx-auto space-y-3">
+                <span class="px-3.5 py-1.5 rounded-full text-xs font-semibold bg-indigo-100 text-indigo-700 dark:bg-indigo-950/80 dark:text-indigo-300 border border-indigo-200 dark:border-indigo-800 inline-block shadow-sm">
+                    ✨ Năm học 2026 - 2027
+                </span>
+                <h2 class="text-3xl sm:text-4xl font-extrabold text-slate-900 dark:text-white tracking-tight">
+                    Kho Đề Cương Tổng Hợp Toàn Diện
+                </h2>
+                <p class="text-sm sm:text-base text-slate-600 dark:text-slate-400 leading-relaxed">
+                    Xem trực tiếp hoặc tải tài liệu Word (.docx) chuẩn cấu trúc giúp bạn bứt phá điểm số trong kỳ thi Giữa Kỳ I Lớp 8.
+                </p>
+            </div>
+
+            <!-- Search & Subject Filter Bar -->
+            <div class="glass-panel p-4 sm:p-5 rounded-2xl shadow-xl shadow-slate-900/5 dark:shadow-none space-y-4">
+                <div class="flex flex-col md:flex-row gap-3 items-center justify-between">
+                    <!-- Search Input -->
+                    <div class="relative w-full md:w-80">
+                        <i class="fa-solid fa-magnifying-glass absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400 text-sm"></i>
+                        <input type="text" id="searchInput" oninput="handleSearch()" placeholder="Tìm kiếm đề cương, câu hỏi..." 
+                            class="w-full pl-10 pr-4 py-2.5 rounded-xl bg-white/80 dark:bg-slate-900/80 border border-slate-200 dark:border-slate-800 text-sm text-slate-800 dark:text-slate-100 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-indigo-500 transition">
+                    </div>
+
+                    <!-- Category Pills Filter -->
+                    <div class="flex items-center gap-1.5 overflow-x-auto w-full md:w-auto pb-1 md:pb-0 scrollbar-none" id="subjectFilterContainer">
+                        <!-- JS injected subject pills -->
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Stats Counter Section -->
+        <div class="grid grid-cols-2 sm:grid-cols-4 gap-3 sm:gap-4">
+            <div class="glass-card p-3.5 sm:p-4 rounded-xl flex items-center space-x-3">
+                <div class="w-10 h-10 rounded-lg bg-blue-500/10 text-blue-500 flex items-center justify-center font-bold">
+                    <i class="fa-solid fa-file-lines"></i>
+                </div>
+                <div>
+                    <div id="statTotal" class="text-lg font-extrabold text-slate-900 dark:text-white">6</div>
+                    <div class="text-xs text-slate-500 dark:text-slate-400 font-medium">Tài liệu đã chuẩn bị</div>
+                </div>
+            </div>
+            <div class="glass-card p-3.5 sm:p-4 rounded-xl flex items-center space-x-3">
+                <div class="w-10 h-10 rounded-lg bg-emerald-500/10 text-emerald-500 flex items-center justify-center font-bold">
+                    <i class="fa-solid fa-book-open"></i>
+                </div>
+                <div>
+                    <div class="text-lg font-extrabold text-slate-900 dark:text-white">5 Môn</div>
+                    <div class="text-xs text-slate-500 dark:text-slate-400 font-medium">Đã bao gồm</div>
+                </div>
+            </div>
+            <div class="glass-card p-3.5 sm:p-4 rounded-xl flex items-center space-x-3">
+                <div class="w-10 h-10 rounded-lg bg-purple-500/10 text-purple-500 flex items-center justify-center font-bold">
+                    <i class="fa-solid fa-circle-check"></i>
+                </div>
+                <div>
+                    <div class="text-lg font-extrabold text-slate-900 dark:text-white">100%</div>
+                    <div class="text-xs text-slate-500 dark:text-slate-400 font-medium">Độ chính xác cao</div>
+                </div>
+            </div>
+            <div class="glass-card p-3.5 sm:p-4 rounded-xl flex items-center space-x-3">
+                <div class="w-10 h-10 rounded-lg bg-amber-500/10 text-amber-500 flex items-center justify-center font-bold">
+                    <i class="fa-solid fa-bolt"></i>
+                </div>
+                <div>
+                    <div class="text-lg font-extrabold text-slate-900 dark:text-white">Miễn phí</div>
+                    <div class="text-xs text-slate-500 dark:text-slate-400 font-medium">Tải xuống .docx</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Documents Grid Display -->
+        <section class="space-y-4">
+            <div class="flex items-center justify-between">
+                <h3 class="text-lg font-bold text-slate-800 dark:text-slate-200 flex items-center gap-2">
+                    <i class="fa-solid fa-folder-open text-indigo-500"></i>
+                    <span>Danh sách tài liệu</span>
+                    <span id="filteredCountBadge" class="text-xs font-semibold px-2.5 py-0.5 rounded-full bg-slate-200 dark:bg-slate-800 text-slate-600 dark:text-slate-400">6</span>
+                </h3>
+            </div>
+
+            <!-- Documents Grid Container -->
+            <div id="documentsGrid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                <!-- Cards dynamically loaded via JS -->
+            </div>
+
+            <!-- Empty State -->
+            <div id="emptyState" class="hidden glass-panel p-12 text-center rounded-2xl space-y-3">
+                <div class="w-16 h-16 bg-indigo-100 dark:bg-indigo-900/40 text-indigo-500 rounded-full flex items-center justify-center mx-auto text-2xl">
+                    <i class="fa-solid fa-folder-minus"></i>
+                </div>
+                <h4 class="text-lg font-bold text-slate-800 dark:text-slate-200">Không tìm thấy tài liệu nào</h4>
+                <p class="text-sm text-slate-500 dark:text-slate-400 max-w-sm mx-auto">Thử đổi từ khóa tìm kiếm hoặc bấm chọn danh mục môn học khác.</p>
+                <button onclick="resetFilters()" class="px-4 py-2 rounded-xl bg-indigo-600 text-white text-xs font-semibold hover:bg-indigo-700 transition">Đặt lại bộ lọc</button>
+            </div>
+        </section>
+    </main>
+
+    <!-- Document Modal / Viewer Window -->
+    <div id="docModal" class="fixed inset-0 z-50 bg-slate-950/70 backdrop-blur-md flex items-center justify-center p-3 sm:p-6 opacity-0 pointer-events-none transition-opacity duration-300">
+        <div class="glass-panel bg-white dark:bg-slate-900 w-full max-w-4xl max-h-[90vh] rounded-2xl shadow-2xl flex flex-col overflow-hidden border border-slate-200 dark:border-slate-800 transform scale-95 transition-transform duration-300" id="modalContainer">
+            
+            <!-- Modal Header -->
+            <div class="p-4 sm:p-5 border-b border-slate-200 dark:border-slate-800 flex items-center justify-between bg-slate-50/50 dark:bg-slate-900/50">
+                <div class="flex items-center space-x-3 overflow-hidden">
+                    <div id="modalSubjectIcon" class="w-10 h-10 rounded-xl flex items-center justify-center text-white shrink-0 font-bold">
+                        <i class="fa-solid fa-file-text"></i>
+                    </div>
+                    <div class="truncate">
+                        <span id="modalBadge" class="text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 rounded-md">MÔN HỌC</span>
+                        <h3 id="modalTitle" class="text-base sm:text-lg font-bold text-slate-900 dark:text-white truncate">Tiêu đề tài liệu</h3>
+                    </div>
+                </div>
+
+                <button onclick="closeModal()" class="w-9 h-9 rounded-xl bg-slate-200/60 dark:bg-slate-800/60 hover:bg-slate-300 dark:hover:bg-slate-700 text-slate-600 dark:text-slate-300 flex items-center justify-center transition">
+                    <i class="fa-solid fa-xmark text-lg"></i>
+                </button>
+            </div>
+
+            <!-- Modal Content Body -->
+            <div class="p-5 sm:p-8 overflow-y-auto flex-grow space-y-4 text-sm sm:text-base leading-relaxed text-slate-700 dark:text-slate-200" id="modalBody">
+                <!-- Content injected dynamically -->
+            </div>
+
+            <!-- Modal Footer Actions -->
+            <div class="p-4 border-t border-slate-200 dark:border-slate-800 bg-slate-50/50 dark:bg-slate-900/50 flex flex-wrap items-center justify-between gap-3">
+                <div class="text-xs text-slate-500 dark:text-slate-400 font-medium flex items-center gap-1.5">
+                    <i class="fa-solid fa-circle-info text-blue-500"></i>
+                    <span>Tài liệu dạng .docx tương thích Microsoft Word, Google Docs</span>
+                </div>
+
+                <div class="flex items-center space-x-2 w-full sm:w-auto">
+                    <button id="copyModalBtn" onclick="copyCurrentDoc()" class="flex-1 sm:flex-none px-4 py-2.5 rounded-xl bg-slate-200 dark:bg-slate-800 hover:bg-slate-300 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-200 font-medium text-xs flex items-center justify-center space-x-2 transition">
+                        <i class="fa-regular fa-copy"></i>
+                        <span>Sao chép nội dung</span>
+                    </button>
+
+                    <button id="downloadModalBtn" onclick="downloadCurrentDoc()" class="flex-1 sm:flex-none px-4 py-2.5 rounded-xl bg-indigo-600 hover:bg-indigo-700 text-white font-medium text-xs flex items-center justify-center space-x-2 shadow-lg shadow-indigo-600/30 transition">
+                        <i class="fa-solid fa-download"></i>
+                        <span>Tải file Word (.docx)</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Toast Notification Overlay -->
+    <div id="toast" class="fixed bottom-6 right-6 z-50 hidden">
+        <div class="glass-panel bg-slate-900/90 dark:bg-slate-100/90 text-white dark:text-slate-900 px-4 py-3 rounded-2xl shadow-2xl flex items-center space-x-3 border border-slate-700/50 dark:border-slate-300/50 toast-animate">
+            <div id="toastIcon" class="text-emerald-400 dark:text-emerald-600 text-lg">
+                <i class="fa-solid fa-circle-check"></i>
+            </div>
+            <p id="toastMessage" class="text-xs font-semibold">Thông báo thành công!</p>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="mt-auto py-6 border-t border-slate-200/60 dark:border-slate-800/60 text-center text-xs text-slate-500 dark:text-slate-400">
+        <p>© 2026 Ôn Tập Giữa Kỳ I - Lớp 8 | Trường THCS Trương Quang Trọng</p>
+    </footer>
+
+    <!-- JavaScript Application Logic -->
+    <script>
+        // Database of Curriculum Documents
+        const docsDatabase = [
+            {
+                id: 'dia-li-8-them',
+                title: 'ĐỊA LÍ 8 (Thêm) - Đề Cương Chuyên Sâu',
+                fileName: 'ĐỊA LÍ 8(thêm).docx',
+                subject: 'Địa Lí',
+                subjectCode: 'dia-li',
+                badgeBg: 'bg-emerald-500/10 text-emerald-600 dark:bg-emerald-500/20 dark:text-emerald-300 border-emerald-500/20',
+                colorIcon: 'bg-emerald-500',
+                icon: 'fa-earth-asia',
+                description: 'Vị trí địa lý, khí hậu nhiệt đới ẩm gió mùa, phát triển kinh tế biển, địa hình đồi núi thuận lợi và khó khăn.',
+                content: `ĐỊA LÍ 8
+Câu 1: 
+a) Nhờ vị trí địa lí nằm hoàn toàn trong vùng nội chí tuyến Bắc bán cầu và tiếp giáp Biển Đông rộng lớn, khí hậu nước ta có đặc điểm nổi bật gì? Giải thích vì sao nước ta không bị khô hạn như một số nước có cùng vĩ độ ở Bắc Phi và Tây Nam Á.
+ * Khí hậu Việt Nam mang tính chất nhiệt đới gió mùa.
+- Tính chất nhiệt đới: Do nằm hoàn toàn trong vùng nội chí tuyến Bắc bán cầu nên nhận lượng bức xạ mặt trời lớn, cân bằng bức xạ luôn dương, nhiệt độ trung bình năm cao (trên 20 độ C, trừ vùng núi cao).
+- Tính chất ẩm và gió mùa: Tiếp giáp biển Đông rộng lớn kết hợp gió mùa mang lại lượng mưa lớn (1500-2000 mm/năm), độ ẩm không khí cao (trên 80%).
+- Mặc dù nằm ở cùng vĩ độ nội chí tuyến với hoang mạc Bắc Phi và Tây Nam Á, nhưng nhờ nằm ở rìa phía đông bán đảo Đông Dương, tiếp giáp Biển Đông rộng lớn và nằm trong khu vực hoạt động của gió mùa Châu Á, các khối khí đi qua biển được tăng cường độ ẩm, mang lại lượng mưa lớn, làm dịu tính chất khô nóng đặc trưng của vĩ độ nội chí tuyến.
+
+b) Trình bày ý nghĩa của vị trí địa lí Việt Nam đối với việc phát triển các ngành kinh tế biển (giao thông vận tải biển, du lịch biển, khai thác hải sản).
+ Ý nghĩa vị trí địa lí đối với phát triển kinh tế biển:
+- Đường bờ biển dài (3260 km), vùng biển rộng lớn (1 triệu km2) nằm trên tuyến hàng hải quốc tế huyết mạch -> thuận lợi phát triển giao thông vận tải biển và dịch vụ cảng biển.
+- Nhiều bãi biển đẹp, đảo và quần đảo cảnh quan sinh động -> phát triển du lịch biển đảo.
+- Vùng biển ấm, nguồn lợi thủy sản phong phú, khoáng sản (dầu khí, muối) -> phát triển khai thác, nuôi trồng thủy hải sản và công nghiệp khai khoáng biển.
+
+Câu 2: Dựa vào kiến thức đã học về địa hình Việt Nam, em hãy chứng minh địa hình đồi núi vừa tạo ra những thuận lợi to lớn (về khoáng sản, thủy điện, lâm nghiệp, du lịch), vừa gây ra những khó khăn cho sản xuất và đời sống dân cư vùng núi nước ta. Lấy ví dụ cụ thể minh họa.
+* Thuận lợi của địa hình đồi núi đối với kinh tế:
+- Khoáng sản phong phú -> phát triển công nghiệp khai khoáng (VD: Than đá ở Quảng Ninh, bô-xit ở Tây Nguyên, sắt ở Thái Nguyên…).
+- Sông ngòi dốc, tiềm năng thủy điện lớn -> xây dựng các nhà máy thủy điện (VD: Thủy điện Sơn La, Hòa Bình trên sông Đà…).
+- Đất feralit và khí hậu phân hóa -> trồng cây công nghiệp lâu năm, cây ăn quả, chăn nuôi gia súc lớn (VD: Cà phê ở Tây Nguyên, chè ở Trung du miền núi Bắc Bộ…).
+- Khí hậu mát mẻ, cảnh quan tự nhiên đẹp -> phát triển du lịch sinh thái, nghỉ dưỡng (VD: Sa Pa, Đà Lạt…).
+
+* Khó khăn của địa hình đồi núi:
+- Địa hình bị chia cắt mạnh, hiểm trở gây khó khăn cho việc giao thông vận tải, kết nối vùng và xây dựng hạ tầng.
+- Thiên tai thường xuyên xảy ra (lũ quét, sạt lở đất, xói mòn…) gây thiệt hại nặng nề cho sản xuất và đời sống dân cư.
+
+Câu 3: Dựa vào đặc điểm vị trí địa lí và phạm vi lãnh thổ Việt Nam, em hãy:
+a) Phân tích ảnh hưởng của vị trí địa lí và phạm vi lãnh thổ đối với sự hình thành đặc điểm khí hậu nhiệt đới ẩm gió mùa của nước ta:
+- Việt Nam nằm hoàn toàn trong đới nóng của bán cầu Bắc, trong vùng gió mùa châu Á, một năm có hai mùa rõ rệt.
+- Phần đất liền Việt Nam hẹp ngang lại nằm kế Biển Đông là nguồn dự trữ ẩm dồi dào, các khối khí di chuyển qua biển ảnh hưởng sâu sắc vào đất liền đã làm cho thiên nhiên nước ta chịu ảnh hưởng sâu sắc của biển.
+- Nước ta nằm trong khu vực chịu nhiều ảnh hưởng của các cơn bão đến từ khu vực biển nhiệt đới Tây Thái Bình Dương.
+
+b) Tại sao nói “Vị trí địa lí của Việt Nam có tính chiến lược trong khu vực Đông Nam Á và trên thế giới”?
+- Là nơi tiếp giáp giữa đất liền và đại dương.
+- Là nơi liền kề với vành đai khoáng sản Thái Bình Dương và vành đai sinh khoáng Địa Trung Hải.
+- Nằm ở ngã tư hàng hải và hàng không quốc tế.
+- Là cầu nối giữa Đông Nam Á lục địa và Đông Nam Á hải đảo.
+- Là cầu nối lục địa Á-Âu và lục địa Ô-xtrây-li-a.`
+            },
+            {
+                id: 'dia-ly-8-truong-tqt',
+                title: 'ĐỊA LÝ 8 - Đề Cương THCS Trương Quang Trọng',
+                fileName: 'ĐỊA LÝ 81.docx',
+                subject: 'Địa Lí',
+                subjectCode: 'dia-li',
+                badgeBg: 'bg-emerald-500/10 text-emerald-600 dark:bg-emerald-500/20 dark:text-emerald-300 border-emerald-500/20',
+                colorIcon: 'bg-teal-600',
+                icon: 'fa-compass',
+                description: 'Kiểm tra Giữa Kì I năm học 2026-2027: Ý nghĩa vị trí địa lí, đặc điểm thiên nhiên & phân hóa Tây Bắc - Đông Bắc.',
+                content: `TRƯỜNG THCS TRƯƠNG QUANG TRỌNG
+NỘI DUNG ÔN TẬP KIỂM TRA GIỮA KÌ I MÔN LỊCH SỬ VÀ ĐỊA LÍ 8
+PHÂN MÔN ĐỊA LÝ 8 - NĂM HỌC 2026 - 2027
+
+I. PHẦN KIẾN THỨC
+A. Trắc nghiệm: Tìm hiểu nội dung bài 1,2 phần Địa lí 8 để làm bài tập trắc nghiệm.
+
+B. Tự luận:
+1. Trình bày ý nghĩa vị trí địa lí Việt Nam:
+Nước ta nằm ở vị trí nội chí tuyến bán cầu Bắc; trong khu vực châu Á gió mùa; nơi tiếp giáp giữa đất liền và đại dương, liền kề với vành đai sinh khoáng Thái Bình Dương và vành đai sinh khoáng Địa Trung Hải.
+
+2. Phân tích ảnh hưởng của vị trí địa lí và phạm vi lãnh thổ đối với sự hình thành đặc điểm địa lí tự nhiên Việt Nam:
+Vị trí địa lí và phạm vi lãnh thổ đã tạo nên các đặc điểm cơ bản của thiên nhiên nước ta:
+– Thiên nhiên nhiệt đới ẩm gió mùa, chịu ảnh hưởng sâu sắc của biển:
++ Khí hậu: Nước ta nằm hoàn toàn trong đới nóng bán cầu Bắc, trong vùng gió mùa châu Á, một năm có 2 mùa rõ rệt. Phần đất liền hẹp ngang kế Biển Đông dồi dào nguồn ẩm làm cho thiên nhiên chịu ảnh hưởng sâu sắc của biển. Nằm trong khu vực chịu nhiều bão nhiệt đới Tây Thái Bình Dương.
++ Sinh vật và đất: Hệ sinh thái rừng nhiệt đới gió mùa phát triển trên đất feralit. Là nơi hội tụ nhiều luồng động, thực vật (từ Hoa Nam xuống, Hi-ma-lay-a tới, Ấn Độ - Mi-an-ma sang, Ma-lai-xi-a - In-đô-nê-xi-a lên). Sinh vật biển đa dạng phong phú.
+– Thiên nhiên phân hoá đa dạng: Khí hậu phân hoá theo chiều bắc – nam và đông – tây, dẫn đến sự phân hoá phong phú của đất và sinh vật.
+
+3. Trình bày các đặc điểm chủ yếu của địa hình Việt Nam:
+- Địa hình đồi núi chiếm ưu thế.
+- Địa hình có hai hướng chính là tây bắc-đông nam và hướng vòng cung.
+- Địa hình có tính chất phân bậc khá rõ rệt.
+- Địa hình chịu tác động của khí hậu nhiệt đới ẩm gió mùa và con người.
+
+4. Ví dụ chứng minh ảnh hưởng của sự phân hoá địa hình đối với sự phân hoá lãnh thổ tự nhiên và khai thác kinh tế (Tây Bắc & Đông Bắc):
+1. Ảnh hưởng đối với tự nhiên:
+♦ Khí hậu:
+- Đông Bắc: Nhiệt đới ẩm gió mùa, mùa đông đến sớm kết thúc muộn, nhiệt độ có thể xuống 0°C.
+- Tây Bắc: Khí hậu phân hóa theo độ cao, dãy Hoàng Liên Sơn chắn gió mùa Đông Bắc nên nhiệt độ ấm hơn 2-3°C.
+♦ Sông ngòi: Đông Bắc chảy theo hướng vòng cung (sông Cầu, sông Thương...); Tây Bắc chảy theo hướng Tây Bắc - Đông Nam.
+♦ Đất: Đông Bắc chủ yếu là đất Feralit; Tây Bắc gồm Feralit và đất mùn núi cao.
+♦ Sinh vật: Đông Bắc chủ yếu cận nhiệt đới; Tây Bắc gồm cận nhiệt đới và ôn đới.
+
+2. Ảnh hưởng đối với khai thác kinh tế:
+- Đông Bắc: Khí hậu mát mẻ, núi cacxtơ nhiều hang động thuận lợi du lịch; nhiều khoáng sản phát triển khai khoáng; phù hợp cây công nghiệp lâu năm, cây ăn quả.
+- Tây Bắc: Nhiều đỉnh núi cao nguyên nổi tiếng phát triển du lịch; đồng cỏ tự nhiên chăn nuôi gia súc lớn; sông ngòi tiềm năng thủy điện lớn. Địa hình bị chia cắt mạnh gây khó khăn giao thông và cần đề phòng lũ quét, sạt lở.`
+            },
+            {
+                id: 'sinh-8',
+                title: 'SINH HỌC 8 - Đề Cương Giữa Kỳ I',
+                fileName: 'SINH 8.docx',
+                subject: 'Sinh Học',
+                subjectCode: 'sinh-hoc',
+                badgeBg: 'bg-rose-500/10 text-rose-600 dark:bg-rose-500/20 dark:text-rose-300 border-rose-500/20',
+                colorIcon: 'bg-rose-500',
+                icon: 'fa-dna',
+                description: 'Cấu tạo & chức năng hệ vận động, lập khẩu phần ăn, các bệnh học đường (cong vẹo cột sống, loãng xương), hệ tiêu hóa.',
+                content: `ĐỀ CƯƠNG GIỮA KÌ 1 SINH 8
+
+Câu 1: Trình bày cấu tạo và chức năng của hệ vận động.
+a) Cấu tạo:
+* Bộ xương: Cấu tạo từ chất hữu cơ và chất khoáng. Người trưởng thành có khoảng 206 xương, chia làm 3 phần:
+  - Xương đầu: Xương sọ brains, xương sọ mặt.
+  - Xương thân: Xương ức, xương sườn, xương sống.
+  - Xương chi: Xương tay, xương chân. Các xương nối với nhau bởi các khớp xương.
+* Hệ cơ: Gồm khoảng 600 cơ, cơ bám vào xương nhờ gân và dây chằng.
+b) Chức năng:
+- Bộ xương tạo nên khung cơ thể, nâng đỡ, tạo hình dạng và bảo vệ cơ thể.
+- Cơ co hay dãn làm xương cử động, giúp cơ thể di chuyển và vận động.
+
+Câu 2: Nêu nguyên tắc lập khẩu phần thức ăn cho con người.
+- Đáp ứng đủ nhu cầu dinh dưỡng của cơ thể (theo lứa tuổi, giới tính, dạng hoạt động).
+- Đảm bảo cân đối tỉ lệ các thành phần và giá trị chất dinh dưỡng.
+- Cung cấp đủ năng lượng, vitamin, muối khoáng và cân đối các chất hữu cơ.
+- Phù hợp với hoàn cảnh kinh tế gia đình và thực tế địa phương.
+
+Câu 3: Các bệnh, tật liên quan đến hệ vận động (Nguyên nhân & Phòng tránh).
+1. Tật cong vẹo cột sống (Bệnh học đường):
+- Nguyên nhân: Ngồi/đứng sai tư thế, bàn ghế không phù hợp, đeo ba lô quá nặng một bên, thiếu dinh dưỡng.
+- Phòng tránh: Ngồi đúng tư thế (lưng thẳng, 2 chân vuông góc mặt đất), dùng bàn ghế phù hợp, đeo ba lô 2 quai, bổ sung Calcium & Vitamin D.
+2. Gãy xương, bong gân, trật khớp:
+- Nguyên nhân: Chấn thương thể thao, tai nạn lao động/giao thông, vận động sai tư thế.
+- Phòng tránh: Khởi động kỹ, vận động vừa sức, cẩn trọng trong sinh hoạt, bổ sung dinh dưỡng chắc xương.
+3. Bệnh loãng xương (Thường ở người lớn tuổi):
+- Nguyên nhân: Sự phân hủy xương lớn hơn tạo thành, thiếu Calcium, lạm dụng corticoid, ít vận động.
+- Phòng tránh: Ăn uống đủ chất, tập thể dục hợp lý, hạn chế rượu bia thuốc lá.
+
+Câu 4: Các cơ quan hệ tiêu hóa và chức năng.
+- Ống tiêu hóa: Miệng (nhai nghiền, enzyme amylase phân giải tinh bột), Thực quản, Dạ dày (co bóp, enzyme pepsin phân giải protein), Ruột non (tiêu hóa và hấp thụ hầu hết chất dinh dưỡng nhờ dịch tụy, dịch mật, dịch ruột), Ruột già (hấp thụ nước, tạo phân), Hậu môn.
+- Tuyến tiêu hóa: Tuyến nước bọt, gan, mật, tụy.
+
+Câu 5: Biện pháp phòng tránh bệnh tiêu hóa.
+- Sâu răng: Vệ sinh răng miệng đúng cách, hạn chế đồ ngọt buổi tối, khám răng định kỳ.
+- Viêm loét dạ dày: Ăn đúng giờ, hạn chế đồ cay nóng dầu mỡ, tránh căng thẳng.
+- Bệnh giun sán, ngộ độc: Thực hiện "Ăn chín, uống sôi", rửa tay bằng xà phòng, tẩy giun định kỳ 6 tháng/lần.
+
+Câu 6: Khái niệm dinh dưỡng & mối quan hệ với tiêu hóa.
+- Dinh dưỡng: Quá trình thu nhận, biến đổi và sử dụng chất dinh dưỡng để duy trì sự sống.
+- Tiêu hóa giúp biến đổi thức ăn thành các chất đơn giản để cơ thể thu nhận. Không có tiêu hóa thì dinh dưỡng không thể diễn ra hiệu quả.
+
+Câu 7: Các hệ cơ quan chính trong cơ thể người:
+- Hệ vận động (Cơ, xương, khớp) -> Định hình, nâng đỡ, di chuyển.
+- Hệ tuần hoàn (Tim, mạch máu) -> Vận chuyển dinh dưỡng, oxygen và chất thải.
+- Hệ hô hấp (Đường dẫn khí, phổi) -> Trao đổi O2 và CO2.
+- Hệ tiêu hóa (Ống tiêu hóa, tuyến tiêu hóa) -> Biến đổi và hấp thụ thức ăn.
+- Hệ bài tiết (Phổi, thận, da) -> Lọc thải chất độc hại.
+- Hệ thần kinh (Não, tủy sống, dây thần kinh) -> Điều khiển, điều hòa hoạt động.
+- Hệ nội tiết (Các tuyến nội tiết) -> Tiết hormone điều hòa cơ thể.
+- Hệ sinh dục -> Sinh sản duy trì nòi giống.`
+            },
+            {
+                id: 'gdcd-8',
+                title: 'GDCD 8 - Soạn Đề Cương Giữa Kỳ I',
+                fileName: 'Soạn GDCD GHKI.docx',
+                subject: 'GDCD',
+                subjectCode: 'gdcd',
+                badgeBg: 'bg-amber-500/10 text-amber-600 dark:bg-amber-500/20 dark:text-amber-300 border-amber-500/20',
+                colorIcon: 'bg-amber-500',
+                icon: 'fa-heart',
+                description: 'Bài 1: Tự hào truyền thống dân tộc; Bài 2: Tôn trọng sự đa dạng văn hóa; Bài 3: Lao động cần cù, sáng tạo.',
+                content: `Soạn GDCD GHKI
+
+Bài 1: Tự Hào Về Truyền Thống Dân Tộc Việt Nam
+Câu 1: Nêu một số truyền thống dân tộc Việt Nam.
+- Yêu nước, đoàn kết, nhân nghĩa, cần cù lao động, hiếu học, tôn sư trọng đạo, hiếu thảo, uống nước nhớ nguồn...
+
+Câu 2: Nhận biết giá trị của các truyền thống dân tộc.
+- Góp phần tích cực vào sự phát triển mỗi cá nhân, là nền tảng cho lòng tự hào, tự tôn và hạnh phúc.
+- Là nền tảng xây dựng đất nước phát triển vững mạnh, tạo bản sắc riêng trong hội nhập quốc tế.
+
+Câu 3: Biểu hiện của lòng tự hào truyền thống.
+- Thể hiện qua thái độ, cảm xúc, lời nói, việc làm giữ gìn và phát huy các giá trị truyền thống.
+
+Câu 4: Việc làm cụ thể giữ gìn, phát huy truyền thống.
+- Tìm hiểu phong tục, tập quán dân tộc.
+- Tôn trọng, trân quý nghệ thuật truyền thống.
+- Biết ơn người có công với đất nước, tham gia hoạt động đền ơn đáp nghĩa.
+- Phê phán những hành vi gây tổn hại đến truyền thống.
+
+Bài 2: Tôn Trọng Sự Đa Dạng Văn Hóa Của Các Dân Tộc
+Câu 1: Biểu hiện của sự đa dạng văn hóa thế giới.
+- Mỗi dân tộc có nét riêng về tính cách, truyền thống, phong tục tập quán, ngôn ngữ...
+
+Câu 2: Lời nói, việc làm tôn trọng sự đa dạng văn hóa.
+- Tích cực tìm hiểu, tiếp thu giá trị tốt đẹp của các dân tộc khác.
+- Phê phán hành vi kỳ thị, phân biệt chủng tộc và văn hóa.
+
+Câu 3: Ý nghĩa tôn trọng sự đa dạng văn hóa.
+- Làm phong phú văn hóa dân tộc mình, củng cố sự đồng cảm, tình hữu nghị và hợp tác hòa bình giữa các quốc gia.
+
+Bài 3: Lao Động Cần Cù, Sáng Tạo
+Câu 1: Khái niệm & biểu hiện.
+- Cần cù: Chăm chỉ, chịu khó làm việc thường xuyên, phấn đấu hết mình.
+- Sáng tạo: Luôn suy nghĩ, cải tiến tìm cách giải quyết tối ưu nâng cao hiệu quả.
+
+Câu 2: Ý nghĩa của cần cù, sáng tạo.
+- Hoàn thiện phẩm chất năng lực bản thân, nâng cao năng suất.
+- Tạo ra nhiều giá trị vật chất tinh thần, cải thiện đời sống.
+- Được mọi người yêu quý và tôn trọng.`
+            },
+            {
+                id: 'lich-su-8',
+                title: 'LỊCH SỬ 8 - Soạn Đề Cương Giữa Kỳ I',
+                fileName: 'SOẠN LỊCH SỬ 8 GIỮA KÌ 1.docx',
+                subject: 'Lịch Sử',
+                subjectCode: 'lich-su',
+                badgeBg: 'bg-purple-500/10 text-purple-600 dark:bg-purple-500/20 dark:text-purple-300 border-purple-500/20',
+                colorIcon: 'bg-purple-600',
+                icon: 'fa-landmark',
+                description: 'Thành tựu CM công nghiệp (Anh, Pháp, Đức, Mỹ), Xung đột Nam-Bắc triều & Trịnh-Nguyễn, tác động của CM công nghiệp.',
+                content: `SOẠN LỊCH SỬ 8 GIỮA KÌ 1
+
+Câu 1: Trình bày những thành tựu tiêu biểu của cách mạng công nghiệp ở Nước Anh, Pháp, Đức và Mỹ (nửa sau thế kỉ XVIII - giữa thế kỉ XIX).
+- Anh: Máy kéo sợi Gien-ni (1764), máy kéo sợi chạy bằng sức nước của Ác-rai (1769), máy hơi nước của Giêm-oát (1784), máy dệt của Các-rai (1785), đầu máy xe lửa Xti-phen-xơn...
+- Pháp: Áp dụng máy móc vào sản xuất dệt may và giao thông đường sắt; giữa thế kỉ XIX vươn lên đứng thứ 2 thế giới.
+- Đức: Tập trung công nghiệp nặng (luyện kim, than đá, hóa chất), dẫn đầu tốc độ công nghiệp hóa châu Âu; giữa thế kỉ XIX đứng thứ 4 thế giới.
+- Mỹ: Máy tỉa hạt bông (1793), tàu thủy chạy bằng hơi nước (1807), máy gặt cơ khí (1831), hệ thống điện tín & bảng mã Moóc-xơ (1838)...
+
+Câu 2: Nguyên nhân bùng nổ xung đột Nam-Bắc triều và Trịnh-Nguyễn.
+- Nam - Bắc triều: Nhà Mạc thành lập nhưng các quan lại cũ vẫn chống đối. Năm 1533 Nguyễn Kim đưa vua Lê lên ngôi ("Phù Lê diệt Mạc" - Nam Triều) mâu thuẫn với Bắc Triều (nhà Mạc) gây ra xung đột kéo dài gần 60 năm.
+- Trịnh - Nguyễn: Mâu thuẫn quyền lực giữa hai dòng họ. Trịnh Kiểm nắm quyền ở phía Bắc, Nguyễn Hoàng vào trấn thủ Thuận Hóa gây dựng cơ sở. Năm 1627, họ Trịnh đem quân đánh Thuận Hóa, mở đầu cuộc xung đột.
+
+Câu 3: Tác động của cuộc cách mạng công nghiệp đối với sản xuất và đời sống con người.
+1. Về sản xuất:
+- Thay đổi phương thức sản xuất: Chuyển từ thủ công sang máy móc, tăng vượt bậc năng suất lao động.
+- Biến đổi diện mạo quốc gia: Xuất hiện nhiều khu công nghiệp và đô thị sầm uất.
+- Chuyển từ văn minh nông nghiệp sang văn minh công nghiệp.
+2. Về xã hội:
+- Hình thành 2 giai cấp cơ bản đối kháng: Tư sản (nắm tư liệu sản xuất) và Vô sản (công nhân làm thuê bị bóc lột).
+- Làm bùng nổ các cuộc đấu tranh của công nhân đòi quyền lợi.
+
+Câu 4: Đồng ý với ý kiến: "Xã hội loài người chuyển từ văn minh nông nghiệp sang văn minh công nghiệp là nhờ cách mạng công nghiệp" không? Vì sao?
+- Hoàn toàn đồng ý. Vì văn minh nông nghiệp phụ thuộc tự nhiên và lao động thủ công năng suất thấp. Cách mạng công nghiệp ra đời máy móc (đặc biệt là máy hơi nước) đã thay thế sức người, nâng cao năng suất vượt bậc, thúc đẩy đô thị hóa và làm thay đổi toàn diện nền kinh tế - xã hội loài người.`
+            },
+            {
+                id: 'tin-hoc-8',
+                title: 'TIN HỌC 8 - Soạn Đề Cương Giữa Kỳ I',
+                fileName: 'SOẠN TỰ LUẬN TIN.docx',
+                subject: 'Tin Học',
+                subjectCode: 'tin-hoc',
+                badgeBg: 'bg-blue-500/10 text-blue-600 dark:bg-blue-500/20 dark:text-blue-300 border-blue-500/20',
+                colorIcon: 'bg-blue-600',
+                icon: 'fa-laptop-code',
+                description: 'Đặc điểm thông tin số, xử lý tin đồn trên Internet, ứng dụng công nghệ số, chuyển đổi tài liệu in sang máy tính.',
+                content: `SOẠN ĐỀ CƯƠNG: MÔN TIN GK1
+
+TỰ LUẬN:
+Câu 1: Các đặc điểm chính của thông tin số:
+- Dễ dàng được nhân bản và lan truyền nhưng khó bị xóa bỏ hoàn toàn.
+- Có thể được truy cập từ xa nếu người quản lý cho phép.
+* Ví dụ so sánh học tập:
+- Tra cứu thông tin: Chưa có CNTT (tìm trong sách, lâu) vs Có CNTT (tra nhanh trên Internet).
+- Thuyết trình: Chưa có CNTT (viết giấy/bảng) vs Có CNTT (dùng PowerPoint, hình ảnh/video).
+
+Câu 2: Ví dụ thực tế về tin đồn trên Internet:
+- Năm 2024, tin đồn chưa kiểm chứng về đời tư nghệ sĩ lan truyền trên mạng xã hội gây ra nhiều tranh cãi và ảnh hưởng негатив tiêu cực đến uy tín danh dự cá nhân.
+
+Câu 3: Xem xét không đầy đủ dẫn đến kết luận sai lầm & cách xử lý khi đăng ảnh người khác:
+- Ví dụ: Đánh giá một bạn học kém chỉ vì 1 bài kiểm tra điểm thấp là chưa toàn diện.
+- Khi muốn đăng ảnh người khác lên MXH: Em sẽ xin phép trước, chọn ảnh phù hợp không làm ảnh hưởng đến quyền riêng tư của họ.
+
+Câu 4: Tìm kiếm các món ăn chế biến từ trứng:
+a. Danh sách: Trứng luộc, trứng chiên, trứng ốp la, trứng cuộn, trứng đúc thịt, canh cà chua trứng, cơm chiên trứng, mì xào trứng...
+b. Từ khóa: "Các món ăn chế biến từ trứng", "Công thức nấu ăn với trứng".
+
+Câu 5: Phương pháp chuyển đổi dữ liệu:
+a) Chuyển trang sách in thành văn bản máy tính:
+- Cách 1: Gõ lại nội dung vào Word.
+- Cách 2: Dùng máy quét Scanner + Phần mềm nhận dạng chữ OCR.
+- Cách 3: Chụp ảnh bằng điện thoại và dùng ứng dụng AI (ChatGPT, Gemini) để trích xuất văn bản.
+b) Chuyển hình ảnh thành bức tranh trên máy tính:
+- Cách 1: Chụp ảnh bằng điện thoại rồi gửi vào máy tính.
+- Cách 2: Vẽ trên giấy rồi scan vào máy tính.
+- Cách 3: Vẽ trực tiếp bằng máy tính bảng và bút cảm ứng.
+
+Câu 6: Ví dụ ứng dụng công nghệ kỹ thuật số nâng cao hiệu quả công việc:
+1. Thanh toán bằng mã QR: Nhanh chóng, an toàn, không cần dùng tiền mặt.
+2. Bản đồ số (Google Maps): Tìm đường tối ưu cho giao hàng và di chuyển.`
+            }
+        ];
+
+        // Unique subjects mapping
+        const subjectsList = [
+            { id: 'all', name: 'Tất cả', icon: 'fa-layer-group' },
+            { id: 'dia-li', name: 'Địa Lí', icon: 'fa-earth-asia' },
+            { id: 'sinh-hoc', name: 'Sinh Học', icon: 'fa-dna' },
+            { id: 'gdcd', name: 'GDCD', icon: 'fa-heart' },
+            { id: 'lich-su', name: 'Lịch Sử', icon: 'fa-landmark' },
+            { id: 'tin-hoc', name: 'Tin Học', icon: 'fa-laptop-code' }
+        ];
+
+        let activeSubject = 'all';
+        let searchQuery = '';
+        let selectedDocId = null;
+
+        // Initialize App
+        document.addEventListener('DOMContentLoaded', () => {
+            renderSubjectFilters();
+            renderDocuments();
+            initTheme();
+        });
+
+        // Render Subject Filter Buttons
+        function renderSubjectFilters() {
+            const container = document.getElementById('subjectFilterContainer');
+            container.innerHTML = subjectsList.map(sub => `
+                <button onclick="setSubjectFilter('${sub.id}')" 
+                    class="px-3.5 py-1.5 rounded-xl text-xs font-semibold flex items-center space-x-1.5 transition whitespace-nowrap ${
+                        activeSubject === sub.id 
+                        ? 'bg-indigo-600 text-white shadow-md shadow-indigo-500/30' 
+                        : 'bg-white/60 dark:bg-slate-800/60 text-slate-600 dark:text-slate-300 hover:bg-slate-200 dark:hover:bg-slate-700'
+                    }">
+                    <i class="fa-solid ${sub.icon}"></i>
+                    <span>${sub.name}</span>
+                </button>
+            `).join('');
+        }
+
+        // Render Document Cards
+        function renderDocuments() {
+            const grid = document.getElementById('documentsGrid');
+            const emptyState = document.getElementById('emptyState');
+            
+            const filteredDocs = docsDatabase.filter(doc => {
+                const matchesSubject = activeSubject === 'all' || doc.subjectCode === activeSubject;
+                const matchesSearch = doc.title.toLowerCase().includes(searchQuery.toLowerCase()) || 
+                                     doc.description.toLowerCase().includes(searchQuery.toLowerCase()) ||
+                                     doc.content.toLowerCase().includes(searchQuery.toLowerCase());
+                return matchesSubject && matchesSearch;
+            });
+
+            document.getElementById('filteredCountBadge').innerText = filteredDocs.length;
+
+            if (filteredDocs.length === 0) {
+                grid.innerHTML = '';
+                emptyState.classList.remove('hidden');
+                return;
+            }
+
+            emptyState.classList.add('hidden');
+            grid.innerHTML = filteredDocs.map(doc => `
+                <div class="glass-card rounded-2xl p-5 flex flex-col justify-between space-y-4 border border-slate-200/60 dark:border-slate-800/60">
+                    <div class="space-y-3">
+                        <div class="flex items-center justify-between">
+                            <span class="text-[10px] font-bold tracking-wider px-2.5 py-1 rounded-lg border ${doc.badgeBg}">
+                                ${doc.subject.toUpperCase()}
+                            </span>
+                            <span class="text-xs text-slate-400 font-medium">.DOCX</span>
+                        </div>
+                        
+                        <div class="flex items-start space-x-3">
+                            <div class="w-10 h-10 rounded-xl ${doc.colorIcon} text-white flex items-center justify-center shrink-0 shadow-md">
+                                <i class="fa-solid ${doc.icon} text-lg"></i>
+                            </div>
+                            <h4 class="font-bold text-base text-slate-900 dark:text-white leading-snug line-clamp-2">
+                                ${doc.title}
+                            </h4>
+                        </div>
+
+                        <p class="text-xs text-slate-600 dark:text-slate-400 line-clamp-3 leading-relaxed">
+                            ${doc.description}
+                        </p>
+                    </div>
+
+                    <div class="pt-3 border-t border-slate-200/40 dark:border-slate-800/40 flex items-center gap-2">
+                        <button onclick="openDocModal('${doc.id}')" class="flex-1 py-2 px-3 rounded-xl bg-indigo-50 dark:bg-indigo-950/50 hover:bg-indigo-100 dark:hover:bg-indigo-900/50 text-indigo-600 dark:text-indigo-300 text-xs font-semibold flex items-center justify-center space-x-1.5 transition">
+                            <i class="fa-regular fa-eye"></i>
+                            <span>Xem đề cương</span>
+                        </button>
+                        <button onclick="downloadDoc('${doc.id}')" title="Tải file Word" class="p-2 rounded-xl bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-200 transition">
+                            <i class="fa-solid fa-download text-xs"></i>
+                        </button>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        // Filter Actions
+        function setSubjectFilter(subjectId) {
+            activeSubject = subjectId;
+            renderSubjectFilters();
+            renderDocuments();
+        }
+
+        function handleSearch() {
+            searchQuery = document.getElementById('searchInput').value.trim();
+            renderDocuments();
+        }
+
+        function resetFilters() {
+            activeSubject = 'all';
+            searchQuery = '';
+            document.getElementById('searchInput').value = '';
+            renderSubjectFilters();
+            renderDocuments();
+        }
+
+        // Modal View Logic
+        function openDocModal(docId) {
+            const doc = docsDatabase.find(d => d.id === docId);
+            if (!doc) return;
+
+            selectedDocId = docId;
+
+            document.getElementById('modalTitle').innerText = doc.title;
+            document.getElementById('modalBadge').innerText = doc.subject;
+            document.getElementById('modalBadge').className = `text-[10px] font-bold uppercase tracking-wider px-2.5 py-1 rounded-md border ${doc.badgeBg}`;
+            
+            const iconContainer = document.getElementById('modalSubjectIcon');
+            iconContainer.className = `w-10 h-10 rounded-xl flex items-center justify-center text-white shrink-0 font-bold ${doc.colorIcon}`;
+            iconContainer.innerHTML = `<i class="fa-solid ${doc.icon}"></i>`;
+
+            // Format body content text into clear paragraphs
+            const formattedText = doc.content
+                .split('\n')
+                .map(line => {
+                    const trimmed = line.trim();
+                    if (!trimmed) return '';
+                    if (trimmed.startsWith('Câu') || trimmed.startsWith('Bài') || trimmed.startsWith('TRƯỜNG') || trimmed.startsWith('PHẦN') || trimmed.startsWith('NỘI DUNG')) {
+                        return `<h4 class="font-bold text-slate-900 dark:text-white mt-4 mb-2 text-base">${trimmed}</h4>`;
+                    }
+                    if (trimmed.startsWith('-') || trimmed.startsWith('*') || trimmed.startsWith('+')) {
+                        return `<p class="pl-4 border-l-2 border-indigo-500/40 my-1">${trimmed}</p>`;
+                    }
+                    return `<p class="my-1">${trimmed}</p>`;
+                })
+                .join('');
+
+            document.getElementById('modalBody').innerHTML = formattedText;
+
+            const modal = document.getElementById('docModal');
+            const modalContainer = document.getElementById('modalContainer');
+            
+            modal.classList.remove('opacity-0', 'pointer-events-none');
+            modalContainer.classList.remove('scale-95');
+            modalContainer.classList.add('scale-100');
+            document.body.style.overflow = 'hidden';
+        }
+
+        function closeModal() {
+            const modal = document.getElementById('docModal');
+            const modalContainer = document.getElementById('modalContainer');
+            
+            modalContainer.classList.remove('scale-100');
+            modalContainer.classList.add('scale-95');
+            modal.classList.add('opacity-0', 'pointer-events-none');
+            document.body.style.overflow = 'auto';
+            selectedDocId = null;
+        }
+
+        // Copy content to clipboard
+        function copyCurrentDoc() {
+            if (!selectedDocId) return;
+            const doc = docsDatabase.find(d => d.id === selectedDocId);
+            if (!doc) return;
+
+            navigator.clipboard.writeText(doc.content).then(() => {
+                showToast('Đã sao chép toàn bộ nội dung đề cương!');
+            }).catch(() => {
+                // Fallback for older browsers
+                const textArea = document.createElement("textarea");
+                textArea.value = doc.content;
+                document.body.appendChild(textArea);
+                textArea.select();
+                document.execCommand('copy');
+                document.body.removeChild(textArea);
+                showToast('Đã sao chép toàn bộ nội dung!');
+            });
+        }
+
+        // Download single document as formatted Word .docx file (HTML Blob format compatible with Word)
+        function downloadDoc(docId) {
+            const doc = docsDatabase.find(d => d.id === docId);
+            if (!doc) return;
+
+            const formattedHtml = `
+                <html xmlns:o='urn:schemas-microsoft-com:office:office' xmlns:w='urn:schemas-microsoft-com:office:word' xmlns='http://www.w3.org/TR/REC-html40'>
+                <head><meta charset='utf-8'><title>${doc.title}</title>
+                <style>
+                    body { font-family: 'Times New Roman', serif; font-size: 13pt; line-height: 1.5; margin: 1in; }
+                    h1, h2, h3 { color: #1e3a8a; }
+                    h1 { font-size: 18pt; text-align: center; }
+                    .header-info { text-align: center; font-style: italic; margin-bottom: 20px; }
+                </style>
+                </head>
+                <body>
+                    <h1>${doc.title}</h1>
+                    <div class="header-info">Tài Liệu Ôn Tập Giữa Kỳ I - Lớp 8 | Môn ${doc.subject}</div>
+                    <hr/>
+                    <pre style="font-family: 'Times New Roman', serif; font-size: 13pt; white-space: pre-wrap;">${doc.content}</pre>
+                </body>
+                </html>
+            `;
+
+            const blob = new Blob(['\ufeff' + formattedHtml], {
+                type: 'application/msword'
+            });
+
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = doc.fileName;
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            URL.revokeObjectURL(url);
+
+            showToast(`Đã tải xuống ${doc.fileName}`);
+        }
+
+        function downloadCurrentDoc() {
+            if (selectedDocId) {
+                downloadDoc(selectedDocId);
+            }
+        }
+
+        function downloadAllDocs() {
+            docsDatabase.forEach((doc, index) => {
+                setTimeout(() => {
+                    downloadDoc(doc.id);
+                }, index * 300);
+            });
+            showToast('Đang tiến hành tải toàn bộ tài liệu...');
+        }
+
+        // Toast Notification System
+        function showToast(msg) {
+            const toast = document.getElementById('toast');
+            document.getElementById('toastMessage').innerText = msg;
+            toast.classList.remove('hidden');
+            
+            setTimeout(() => {
+                toast.classList.add('hidden');
+            }, 3000);
+        }
+
+        // Dark / Light Theme Toggle
+        function toggleDarkMode() {
+            const html = document.documentElement;
+            const themeIcon = document.getElementById('themeIcon');
+            
+            if (html.classList.contains('dark')) {
+                html.classList.remove('dark');
+                themeIcon.className = 'fa-solid fa-sun text-amber-500';
+                localStorage.setItem('theme', 'light');
+            } else {
+                html.classList.add('dark');
+                themeIcon.className = 'fa-solid fa-moon text-slate-300';
+                localStorage.setItem('theme', 'dark');
+            }
+        }
+
+        function initTheme() {
+            const savedTheme = localStorage.getItem('theme');
+            const themeIcon = document.getElementById('themeIcon');
+            if (savedTheme === 'light') {
+                document.documentElement.classList.remove('dark');
+                themeIcon.className = 'fa-solid fa-sun text-amber-500';
+            } else {
+                document.documentElement.classList.add('dark');
+                themeIcon.className = 'fa-solid fa-moon text-slate-300';
+            }
+        }
+
+        // Close modal on Escape key or backdrop click
+        window.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape') closeModal();
+        });
+
+        document.getElementById('docModal').addEventListener('click', (e) => {
+            if (e.target.id === 'docModal') closeModal();
+        });
+    </script>
+</body>
+</html>
